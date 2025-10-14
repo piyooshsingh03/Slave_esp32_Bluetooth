@@ -7,11 +7,12 @@ unsigned long ticktime=0;
 Data HS={0},TO={0},Stand={0}, Mangnetude={0};
 uint8_t Green_zone=0,ST_zone=0;
 Time Recordtime={0};
-Event slave_flag={0}, master_flag={0}, flash={0};
+Event slave_flag={0}, master_flag={0}, flash={0}, mode={0};
 int vib_time=500;
 int vib_gap_time=500;
 counting count={0,3};
 char sentdata[100]={0};
+convert manipulate={0};
 void dataRead(void)
 {
    //could add VECTOR_ACCELEROMETER, VECTOR_MAGNETOMETER,VECTOR_GRAVITY...
@@ -94,7 +95,9 @@ void printEvent1(sensors_event_t* event) {
   // Serial.print("\tx= ");
   // Serial.print(x);
   // Serial.print(",");
-  // Serial.print(currentData.pitch);
+  Serial.println(currentData.roll);
+  Serial.println(currentData.pitch);
+  Serial.println(currentData.yaw);
   // Serial.print(",");
   // Serial.println(z);
 }
@@ -118,7 +121,7 @@ if (event->type == SENSOR_TYPE_LINEAR_ACCELERATION) {
   // Serial.print(currentData.accelX);
   // Serial.print(",");
 //   Serial.print(currentData.accelY);
-//   Serial.print(",");
+  // Serial.print(",");
 //   Serial.println(currentData.accelZ);
 // Serial.print(Mangnetude.accl);
 }
@@ -180,7 +183,7 @@ void Green_area()
       Green_zone=1;ST_zone=0;count.GT=0;
         // Serial.println("check1");
     }
-    if ((currentData.pitch>((HS.Threshold_pitch+5)) && currentData.pitch<(TO.Threshold_pitch-5)) && ST_zone==0)
+    if ((currentData.pitch>((HS.Threshold_pitch)) && currentData.pitch<(TO.Threshold_pitch)) && ST_zone==0)
     {
       ST_zone=1;  Recordtime.ST_Window=millis();
       // Serial.println("check2");
@@ -190,12 +193,12 @@ void Green_area()
     { 
       // Serial.println("check3");
       if ((Mangnetude.accl<5 && Mangnetude.accl>=1))
-      {
-        count.GT+=1;
-        Serial.println("Count GT: "+String(count.GT));
-        if (count.GT>70){
-          for (int i =0; i<3; i++){SOS();}
-          count.GT=0;}
+    {
+      count.GT+=1;
+      Serial.println("Count GT: "+String(count.GT));
+      if (count.GT>70){
+      for (int i =0; i<3; i++){SOS();}
+      count.GT=0;}
       }
     }
 }
@@ -237,4 +240,11 @@ void SOS(void)
     delay(vib_time);
     digitalWrite(Motor1, LOW);
     delay(vib_gap_time);
+}
+void data_manipulation()
+{
+manipulate.roll=currentData.roll*100;
+manipulate.pitch=currentData.pitch*100;
+manipulate.yaw=currentData.yaw*100;
+manipulate.Accl=Mangnetude.accl*100;
 }

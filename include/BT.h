@@ -58,7 +58,15 @@ void notifyCB(NimBLERemoteCharacteristic* pChr, uint8_t* pData, size_t length, b
     Recordtime.HS_delay=valStr;
     master_flag. update_freez_time=1;
     }
-
+    if(key=="game" && valStr==1)
+    {
+    mode.Game=1;
+    }
+    if(key=="game" && valStr==0)
+    {
+    mode.Game=0;
+    }
+    
 }
 }
 // ---------- Client Callbacks ----------
@@ -131,21 +139,21 @@ void HandleBle()
 {
     if (M_ack==1)
     {
-        Recordtime.ACK_time=millis();
-        count.vib=0;
-        M_ack=0;
-        Serial.println("Master HS : "+String(Recordtime.ACK_time));
+    Recordtime.ACK_time=millis();
+    count.vib=0;
+    M_ack=0;
+    Serial.println("Master HS : "+String(Recordtime.ACK_time));
     }
     if (slave_flag.HS==1)
     {
     if (pRemoteChr->canWrite()) {
         pRemoteChr->writeValue((uint8_t*)&hs_flag, strlen(hs_flag), true);   
-    slave_flag.HS=0;
+        slave_flag.HS=0;
     }
     }
     if ( flash.read==1)
     {
-        Read_data();
+    Read_data();
     if (pRemoteChr->canWrite()) {
     pRemoteChr->writeValue((uint8_t*)&sentdata, strlen(sentdata), true);   
     flash.read=0;

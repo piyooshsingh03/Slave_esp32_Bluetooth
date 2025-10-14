@@ -54,9 +54,10 @@ typedef struct{
     uint8_t update_vib_num: 1;
     uint8_t update_freez_time: 1;
     uint8_t update_freez_count: 1;
+    uint8_t Game: 1;
 }Event;
 
-extern Event slave_flag,master_flag,flash;
+extern Event slave_flag,master_flag,flash, mode;
 
 typedef struct{
     uint8_t vib;
@@ -69,6 +70,15 @@ extern counting count;
 extern unsigned long ticktime;
 extern char sentdata[100];
 
+typedef struct{
+    int16_t roll;
+    int16_t pitch;
+    int16_t yaw;
+    int16_t Accl;     //Gettring
+}convert;
+
+extern convert manipulate;
+
 void dataRead(void);
 void printEvent1(sensors_event_t* event);
 void printEvent2(sensors_event_t* event);
@@ -77,4 +87,5 @@ void Green_area();
 void HeelStrike(void);
 void ReadTime(void);
 void SOS(void);
+void data_manipulation();
 #endif

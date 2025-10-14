@@ -35,31 +35,30 @@ NimBLEDevice::init("ESP32_Client");
 
     pScan->start(scanTimeMs);
     Serial.println("Scanning...");
-  delay(1000);
-  
+    delay(1000);
   ticktime=millis();
   // Write_config_data();
   Read_data();
   Read_config_data();
 }
-
 void loop(void)
 {
-   if (doConnect) {
-        doConnect = false;
-        if (connectToServer()) {
-            Serial.println("Now receiving notifications...");
+  if (doConnect) {
+      doConnect = false;
+      if (connectToServer()) {
+        Serial.println("Now receiving notifications...");
         } else {
         Serial.println("Connection failed, restarting scan...");
         NimBLEDevice::getScan()->start(scanTimeMs, false, true);
         } 
     }
+if (mode.Game==0){
 Recordtime.watching_you=millis(); 
 dataRead();
 // Serial.print(",");
 // Serial.print(TO.Threshold_pitch);     // Heel Strike
 // Serial.print(",");
-// Serial.println(Stand.Threshold_pitch);
+// Serial.print(Stand.Threshold_pitch);
 // Serial.print(",");
 // Serial.println(HS.Threshold_pitch);    // Toe off
 // Serial.print(",");
@@ -68,5 +67,18 @@ HeelStrike();
 Green_area();
 HandleBle();
 delay(10);
-// digitalWrite(Motor1, LOW);
+  }
+ if (mode.Game==1){
+
+  dataRead();
+  data_manipulation();
+  char buffer[128];
+     snprintf(buffer, sizeof(buffer), "%s,%d,%d,%d,%d", "s",manipulate.roll,manipulate.pitch,manipulate.yaw,manipulate.Accl);
+  if (pRemoteChr->canWrite()) {
+      pRemoteChr->writeValue((uint8_t*)&buffer, sizeof(buffer), true);   
+    }
+Serial.println(buffer);
+ memset(buffer, 0, sizeof(buffer));  // set all bytes to 0
+delay(50);
+ }
 }

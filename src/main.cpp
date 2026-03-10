@@ -55,14 +55,14 @@ void loop(void)
 if (mode.Game==0){
 Recordtime.watching_you=millis(); 
 dataRead();
-// Serial.print(",");
-// Serial.print(TO.Threshold_pitch);     // Heel Strike
-// Serial.print(",");
-// Serial.print(Stand.Threshold_pitch);
-// Serial.print(",");
-// Serial.println(HS.Threshold_pitch);    // Toe off
-// Serial.print(",");
-// Serial.println(Mangnetude.Thresold_accl);    // Toe off
+Serial.print(",");
+Serial.print(TO.Threshold_pitch);     // Heel Strike
+Serial.print(",");
+Serial.print(Stand.Threshold_pitch);
+Serial.print(",");
+Serial.println(HS.Threshold_pitch);    // Toe off
+Serial.print(",");
+Serial.println(Mangnetude.Thresold_accl);    // Toe off
 HeelStrike();
 Green_area();
 HandleBle();
